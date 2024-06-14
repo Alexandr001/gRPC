@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Grpc";
+
+package products;
+
+service Products {
+  rpc GetAllProducts (GetProductsRequest) returns (GetProductsResponse);
+  rpc GetProductById (GetProductByIdRequest) returns (GetProductByIdResponse);
+  rpc CreateProduct (CreateProductRequest) returns (CreateProductResponse);
+  rpc DeleteProductById (DeleteProductByIdRequest) returns (DeleteProductByIdResponse);
+}
+
+// GetProducts
+message GetProductsRequest {
+}
+
+message GetProductsResponse {
+  repeated Product products = 1;
+}
+
+// GetProductById
+message GetProductByIdRequest {
+  int32 id = 1;
+}
+
+message GetProductByIdResponse {
+  Product product = 1;
+}
+
+// CreateProduct
+message CreateProductRequest {
+  Product product = 1;
+}
+
+message CreateProductResponse {
+  int32 id = 1;
+}
+
+// DeleteProduct
+message DeleteProductByIdRequest {
+  int32 id = 1;
+}
+
+message DeleteProductByIdResponse {
+  
+}
+
+message Product {
+  int32 id = 1;
+  string name = 2;
+  google.protobuf.StringValue description = 3;
+  google.protobuf.Timestamp data_time_create = 4;
+}

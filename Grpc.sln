@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrpcClient", "GrpcClient\GrpcClient.csproj", "{DA19A6CB-24C5-4315-836C-ED36AA27F8AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrpcServer", "GrpcServer\GrpcServer.csproj", "{2AF758D2-E080-4AD2-B63B-F682477F8A96}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DA19A6CB-24C5-4315-836C-ED36AA27F8AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA19A6CB-24C5-4315-836C-ED36AA27F8AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA19A6CB-24C5-4315-836C-ED36AA27F8AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA19A6CB-24C5-4315-836C-ED36AA27F8AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2AF758D2-E080-4AD2-B63B-F682477F8A96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AF758D2-E080-4AD2-B63B-F682477F8A96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AF758D2-E080-4AD2-B63B-F682477F8A96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AF758D2-E080-4AD2-B63B-F682477F8A96}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
