@@ -1,7 +1,7 @@
 using Google.Protobuf.WellKnownTypes;
 using Grpc;
 using Grpc.Core;
-using GrpcServer.ActionFilters;
+using GrpcServer.AuthorizationPolicy;
 using Microsoft.AspNetCore.Authorization;
 
 namespace GrpcServer.GrpcServices;
@@ -9,7 +9,6 @@ namespace GrpcServer.GrpcServices;
 public sealed class ProductService : Products.ProductsBase
 {
     [Authorize]
-    // [ApiKeyGrpc]
     public override Task<GetProductsResponse> GetAllProducts(GetProductsRequest request, ServerCallContext context)
     {
         var getProductsResponse = new GetProductsResponse();
