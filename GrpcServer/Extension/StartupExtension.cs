@@ -11,7 +11,7 @@ namespace GrpcServer.Extension;
 
 public static class StartupExtension
 {
-    public static void AddAuth(this IServiceCollection serviceCollection, IConfiguration configuration)
+    public static void AddAuthenticationAndAuthorization(this IServiceCollection serviceCollection, IConfiguration configuration)
     {
         serviceCollection.AddAuthentication(options =>
             {
@@ -20,30 +20,10 @@ public static class StartupExtension
             })
             .AddJwt(configuration)
             .AddApiKey(configuration);
-
-        var apiKeyAuthorizePolicy = new AuthorizationPolicyBuilder(ApiKeyAuthSchemeOptions.SchemeName)
-            .AddAuthenticationSchemes(ApiKeyAuthSchemeOptions.SchemeName)
-            .RequireAssertion(context =>
-            {
-                var isAuthenticated = context.User.Identity?.IsAuthenticated ?? true;
-                return isAuthenticated;
-            })
-            .Build();
-        var jwtAuthorizePolicy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
-            .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
-            .RequireAuthenticatedUser()
-            .Build();
         
-        serviceCollection.AddAuthorization(options =>
-        {
-            options.AddPolicy(
-                JwtBearerDefaults.AuthenticationScheme,
-                jwtAuthorizePolicy);
-            options.AddPolicy(
-                ApiKeyAuthSchemeOptions.SchemeName,
-                apiKeyAuthorizePolicy);
-            
-            options.DefaultPolicy = apiKeyAuthorizePolicy;
-        });
+        serviceCollection.AddAuthorizationBuilder()
+                    .AddPolicy(JwtBearerDefaults.AuthenticationScheme, AuthorizationExtension.JwtPolicy)
+                    .AddPolicy(ApiKeyAuthSchemeOptions.SchemeName, AuthorizationExtension.ApiKeyPolicy)
+                    .SetDefaultPolicy(AuthorizationExtension.ApiKeyPolicy);
     }
 }

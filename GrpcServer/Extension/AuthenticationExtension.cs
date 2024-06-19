@@ -7,7 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace GrpcServer.Extension;
 
-public static class AuthExtension
+public static class AuthenticationExtension
 {
     public static AuthenticationBuilder AddJwt(this AuthenticationBuilder builder, IConfiguration configuration)
     {

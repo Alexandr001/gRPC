@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GrpcServer.Controllers;
@@ -13,6 +14,7 @@ public class HealthCheckController : ControllerBase
         _logger = logger;
     }
 
+    [Authorize]
     [HttpGet]
     public Task<string> IsActiveAsync()
     {

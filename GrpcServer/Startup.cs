@@ -22,7 +22,7 @@ public sealed class Startup
     {
         serviceCollection.Configure<JwtOptions>(_configuration.GetSection(JwtOptions.SectionName));
 
-        serviceCollection.AddAuth(_configuration);
+        serviceCollection.AddAuthenticationAndAuthorization(_configuration);
         
         serviceCollection.AddControllers();
         serviceCollection.AddEndpointsApiExplorer();
