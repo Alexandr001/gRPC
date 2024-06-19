@@ -1,35 +1,49 @@
 using System.Text;
+using GrpcServer.AuthorizationPolicy;
+using GrpcServer.AuthScheme;
 using GrpcServer.Models.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.IdentityModel.Tokens;
 
 namespace GrpcServer.Extension;
 
 public static class StartupExtension
 {
-    public static void AddJwtToken(this IServiceCollection serviceCollection, IConfiguration configuration)
+    public static void AddAuth(this IServiceCollection serviceCollection, IConfiguration configuration)
     {
-        var jwtOptions =
-            configuration.GetSection(JwtOptions.SectionName).Get<JwtOptions>() 
-            ?? throw new ArgumentNullException(nameof(JwtOptions));
-
-        serviceCollection.AddAuthentication(opt =>
+        serviceCollection.AddAuthentication(options =>
             {
-                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-            .AddJwtBearer(options =>
+            .AddJwt(configuration)
+            .AddApiKey(configuration);
+
+        var apiKeyAuthorizePolicy = new AuthorizationPolicyBuilder(ApiKeyAuthSchemeOptions.SchemeName)
+            .AddAuthenticationSchemes(ApiKeyAuthSchemeOptions.SchemeName)
+            .RequireAssertion(context =>
             {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = jwtOptions.Issuer,
-                    ValidAudience = jwtOptions.Audience,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Secret)),
-                };
-            });
+                var isAuthenticated = context.User.Identity?.IsAuthenticated ?? true;
+                return isAuthenticated;
+            })
+            .Build();
+        var jwtAuthorizePolicy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
+            .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+            .RequireAuthenticatedUser()
+            .Build();
+        
+        serviceCollection.AddAuthorization(options =>
+        {
+            options.AddPolicy(
+                JwtBearerDefaults.AuthenticationScheme,
+                jwtAuthorizePolicy);
+            options.AddPolicy(
+                ApiKeyAuthSchemeOptions.SchemeName,
+                apiKeyAuthorizePolicy);
+            
+            options.DefaultPolicy = apiKeyAuthorizePolicy;
+        });
     }
 }

@@ -2,6 +2,8 @@ using Google.Protobuf.WellKnownTypes;
 using Grpc;
 using Grpc.Core;
 using GrpcServer.AuthorizationPolicy;
+using GrpcServer.AuthScheme;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 
 namespace GrpcServer.GrpcServices;
@@ -26,10 +28,20 @@ public sealed class ProductService : Products.ProductsBase
         return Task.FromResult(getProductsResponse);
     }
 
+    [Authorize(Policy = JwtBearerDefaults.AuthenticationScheme)]
     public override Task<GetProductByIdResponse> GetProductById(GetProductByIdRequest request,
         ServerCallContext context)
     {
-        return base.GetProductById(request, context);
+        return Task.FromResult(new GetProductByIdResponse
+        {
+            Product = new Product
+            {
+                Id = 1,
+                Name = "Name",
+                DataTimeCreate = Timestamp.FromDateTime(DateTime.UtcNow),
+                Description = "Desc"
+            }
+        });
     }
 
     public override Task<CreateProductResponse> CreateProduct(CreateProductRequest request, ServerCallContext context)

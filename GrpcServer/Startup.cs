@@ -4,6 +4,7 @@ using GrpcServer.AuthScheme;
 using GrpcServer.Extension;
 using GrpcServer.GrpcServices;
 using GrpcServer.Interceptors;
+using GrpcServer.Models.Options;
 using Microsoft.AspNetCore.Authorization;
 
 namespace GrpcServer;
@@ -19,39 +20,26 @@ public sealed class Startup
 
     public void ConfigureServices(IServiceCollection serviceCollection)
     {
-        // serviceCollection
-        //     .AddAuthentication(options => { options.DefaultScheme = ApiKeyAuthSchemeOptions.Name; })
-        //     .AddScheme<ApiKeyAuthSchemeOptions, ApiKeyAuthHandler>(ApiKeyAuthSchemeOptions.Name, options => {});
-        // serviceCollection.AddAuthorization(options =>
-        // {
-        //     options.AddPolicy(ApiKeyGrpcRequirement.NAME, builder => { builder.AddRequirements(new ApiKeyGrpcRequirement()); });
-        // });
-        serviceCollection.AddJwtToken(_configuration);
+        serviceCollection.Configure<JwtOptions>(_configuration.GetSection(JwtOptions.SectionName));
+
+        serviceCollection.AddAuth(_configuration);
+        
         serviceCollection.AddControllers();
         serviceCollection.AddEndpointsApiExplorer();
+
         serviceCollection.AddGrpc(options => { options.Interceptors.Add<ExceptionInterceptor>(); });
         serviceCollection.AddGrpcReflection();
+
         serviceCollection.AddSwaggerGen();
         serviceCollection.AddHttpContextAccessor();
+
         serviceCollection.AddScoped<IAuthorizationHandler, ApiKeyGrpcHandler>();
     }
 
     public void Configure(IApplicationBuilder builder)
     {
         builder.UseRouting();
-        // builder.Use( async (context, func) =>
-        // {
-        //     await func();
-        //     int.TryParse(ProgramExtension.GRPC_PORT, out var val);
-        //     if (context.Connection.LocalPort == val)
-        //     {
-        //         if (context.Response.StatusCode == StatusCodes.Status401Unauthorized)
-        //         {
-        //             throw new RpcException(new Status(StatusCode.Unauthenticated, "Не авторизован!"));
-        //         }
-        //     }
-        // });
-
+        
         builder.UseSwagger();
         builder.UseSwaggerUI();
 
@@ -62,6 +50,7 @@ public sealed class Startup
         {
             routeBuilder.MapGrpcReflectionService();
             routeBuilder.MapGrpcService<ProductService>();
+            routeBuilder.MapGrpcService<AuthService>();
             routeBuilder.MapControllers();
         });
     }

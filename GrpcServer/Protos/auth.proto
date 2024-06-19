@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Grpc";
+
+package auth;
+
+service Auth {
+  rpc Login (LoginRequest) returns (LoginResponse);
+}
+
+message LoginRequest {
+  string Login = 1;
+  string Password = 2;
+}
+
+message LoginResponse {
+  string Token = 1;
+}
