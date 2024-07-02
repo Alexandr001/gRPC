@@ -8,15 +8,36 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Protobuf Include="Protos\greet.proto" GrpcServices="Server"/>
+        <Protobuf Include="Protos\auth.proto">
+          <GrpcServices>Both</GrpcServices>
+          <Access>Public</Access>
+          <ProtoCompile>True</ProtoCompile>
+          <CompileOutputs>True</CompileOutputs>
+          <OutputDir>obj\Debug\net8.0\</OutputDir>
+          <Generator>MSBuild:Compile</Generator>
+          <Type>Both</Type>
+        </Protobuf>
+        <Protobuf Include="Protos\products.proto">
+          <GrpcServices>Both</GrpcServices>
+          <Access>Public</Access>
+          <ProtoCompile>True</ProtoCompile>
+          <CompileOutputs>True</CompileOutputs>
+          <OutputDir>obj\Debug\net8.0\</OutputDir>
+          <Generator>MSBuild:Compile</Generator>
+          <Type>Both</Type>
+        </Protobuf>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Grpc.AspNetCore" Version="2.57.0"/>
-        <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.63.0" />
+        <PackageReference Include="Grpc.Net.Client" Version="2.63.0" />
+        <PackageReference Include="Grpc.Net.ClientFactory" Version="2.63.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.6" />
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.6.2" />
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.6.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\GrpcServer\GrpcServer.csproj" />
     </ItemGroup>
 
 </Project>

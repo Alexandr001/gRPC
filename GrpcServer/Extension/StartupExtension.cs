@@ -1,11 +1,5 @@
-using System.Text;
-using GrpcServer.AuthorizationPolicy;
 using GrpcServer.AuthScheme;
-using GrpcServer.Models.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
-using Microsoft.IdentityModel.Tokens;
 
 namespace GrpcServer.Extension;
 
